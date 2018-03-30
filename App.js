@@ -11,6 +11,7 @@ import {
   Text,
   View
 } from 'react-native';
+import Kanban from './KanbanBridgeNativeView'
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' +
@@ -24,15 +25,14 @@ export default class App extends Component<Props> {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit App.js
-        </Text>
-        <Text style={styles.instructions}>
-          {instructions}
-        </Text>
+        <Kanban
+          style={styles.kanban}
+          data={[
+            { header: 'done', items: [{ id: 1, text: '1'}, { id: 2, text: '2'}] },
+            { header: 'now', items: [{ id: 3, text: '3'}, { id: 4, text: '4'}] },
+            { header: 'next', items: [{ id: 5, text: '5'}, { id: 6, text: '6'}] }
+          ]}
+        />
       </View>
     );
   }
@@ -44,6 +44,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
+  },
+  kanban: {
+    flex: 1,
+    backgroundColor: 'pink',
   },
   welcome: {
     fontSize: 20,
