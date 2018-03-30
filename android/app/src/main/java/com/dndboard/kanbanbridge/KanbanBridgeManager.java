@@ -3,8 +3,11 @@
 package com.dndboard.kanbanbridge;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.support.v4.util.Pair;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.dndboard.R;
@@ -21,12 +24,12 @@ import com.woxthebox.draglistview.BoardView;
 import java.util.ArrayList;
 
 
-
 public class KanbanBridgeManager extends SimpleViewManager<BoardView> {
     public static final String REACT_CLASS = "KanbanBridge";
     private static int sCreatedItems = 0;
     private int mColumns;
     private Activity mActivity = null;
+    private BoardView mBoardView;
 
 
     @Override
@@ -44,6 +47,16 @@ public class KanbanBridgeManager extends SimpleViewManager<BoardView> {
         mActivity = context.getCurrentActivity();
         return new BoardView(context);
     }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.board_layout, container, false);
+
+        mBoardView = view.findViewById(R.id.board_view);
+        return view;
+    }
+
+
 
     @ReactProp(name = "snapToColumnsWhenScrolling", defaultBoolean = true)
     public void setSnapToColumnsWhenScrolling(BoardView view, boolean value) {
