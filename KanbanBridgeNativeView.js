@@ -1,14 +1,14 @@
-//  Created by react-native-create-bridge
+import PropTypes from 'prop-types';
+import {requireNativeComponent, ViewPropTypes} from 'react-native';
 
-import React, { Component } from 'react'
-import PropTypes from 'proptypes'
-import { requireNativeComponent } from 'react-native'
+var iface = {
+  name: 'View',
+  propTypes: {
+    ...ViewPropTypes, // include the default view properties
+  },
+};
 
-const KanbanBridge = requireNativeComponent('KanbanBridge', KanbanBridgeView)
+module.exports = requireNativeComponent('KanbanBridge', iface);
 
-export default class KanbanBridgeView extends Component {
-  render () {
-    return <KanbanBridge {...this.props} />
-  }
-}
+
 

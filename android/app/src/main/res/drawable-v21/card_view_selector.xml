@@ -13,9 +13,13 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources>
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-    </style>
-</resources>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <inset android:insetLeft="3dp" android:insetBottom="4dp" android:insetRight="3dp" android:insetTop="4dp">
+            <shape>
+                <stroke android:color="@color/app_color" android:width="2dp"/>
+                <corners android:radius="3dp"/>
+            </shape>
+        </inset>
+    </item>
+</selector>
