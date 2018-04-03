@@ -24,7 +24,17 @@ type Props = {};
 export default class App extends Component<Props> {
   render() {
     return (
-      <Kanban style={styles.kanban} />
+      <Kanban
+        style={styles.kanban}
+        dataSource={[
+          {header: 'Done', items: [{id: 1, text: 'text 1'}]},
+          {header: 'Now', items: [
+            {id: 2, text: 'text 2'},
+            {id: 3, text: 'text 3'}
+          ]},
+          {header: 'Next', items: []}
+        ]}
+      />
     );
   }
 }

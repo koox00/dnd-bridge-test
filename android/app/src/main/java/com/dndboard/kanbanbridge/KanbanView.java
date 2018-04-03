@@ -5,19 +5,26 @@ import android.os.Build;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.app.FragmentTransaction;
+import android.support.v4.util.Pair;
+import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.dndboard.R;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
+import com.woxthebox.draglistview.BoardView;
+
+import java.util.ArrayList;
 
 
 public class KanbanView extends FrameLayout {
 
-    private BoardFragment mBoardFragment;
-    private boolean mHasSavedInstance = false;
+    private static int sCreatedItems = 0;
+    private BoardView mBoardView;
+    private int mColumns;
 
     public KanbanView(ReactContext context) {
         super(context);
@@ -29,48 +36,43 @@ public class KanbanView extends FrameLayout {
     }
 
     public void init() {
-        inflate(getReactContext(), R.layout.container, this);
-        mBoardFragment = BoardFragment.newInstance(getReactContext());
+        View view = inflate(getReactContext(), R.layout.board_layout, this);
+        mBoardView = view.findViewById(R.id.board_view);
     }
 
-    @Nullable
-    @Override
-    protected Parcelable onSaveInstanceState() {
-        mHasSavedInstance = true;
-        return super.onSaveInstanceState();
-    }
-
-    @Override
-    protected void onAttachedToWindow() {
-        if (!mHasSavedInstance) {
-            FragmentManager fragmentManager = getReactContext().getCurrentActivity().getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.container_id, mBoardFragment, "fragment").commit();
+    public void addColumnList(String name) {
+        final ArrayList<Pair<Long, String>> mItemArray = new ArrayList<>();
+        int addItems = 3;
+        for (int i = 0; i < addItems; i++) {
+            long id = sCreatedItems++;
+            mItemArray.add(new Pair<>(id, "Item " + id));
         }
-        super.onAttachedToWindow();
+
+        final int column = mColumns;
+        final ItemAdapter listAdapter = new ItemAdapter(mItemArray, R.layout.column_item, R.id.item_layout, true);
+        final View header = View.inflate(getReactContext(), R.layout.column_header, null);
+        ((TextView) header.findViewById(R.id.text)).setText(name);
+
+        mBoardView.addColumnList(listAdapter, header, false);
+        mColumns++;
     }
 
-    @Override
-    protected void onDetachedFromWindow() {
-        if (getReactContext().getCurrentActivity() != null) {
-            FragmentManager fragmentManager = getReactContext().getCurrentActivity().getFragmentManager();
-
-            // Code crashes with java.lang.IllegalStateException: Activity has been destroyed
-            // if our activity has been destroyed when this runs
-            if (mBoardFragment != null) {
-                boolean isDestroyed = false;
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    isDestroyed = getReactContext().getCurrentActivity().isDestroyed();
-                }
-
-                if (!isDestroyed) {
-                    // https://stackoverflow.com/a/34508430/61072
-                    fragmentManager.beginTransaction().remove(mBoardFragment).commitAllowingStateLoss();
-                }
-            }
-        }
-        super.onDetachedFromWindow();
+    public void setSnapToColumnsWhenScrolling(boolean snapToColumns) {
+        mBoardView.setSnapToColumnsWhenScrolling(snapToColumns);
     }
+
+    public void setSnapToColumnsWhenDragging(boolean snapToColumns) {
+        mBoardView.setSnapToColumnWhenDragging(snapToColumns);
+    }
+
+    public void setSnapDragItemToTouch(boolean snapToTouch) {
+        mBoardView.setSnapDragItemToTouch(snapToTouch);
+    }
+
+    public void setSnapToColumnInLandscape(boolean snapToColumn) {
+        mBoardView.setSnapToColumnInLandscape(snapToColumn);
+    }
+
 
     @Override
     public void requestLayout() {
