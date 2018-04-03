@@ -13,11 +13,15 @@ import android.widget.TextView;
 import com.dndboard.R;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
 import com.woxthebox.draglistview.BoardView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Map;
 
 
 public class KanbanView extends FrameLayout {
@@ -65,18 +69,19 @@ public class KanbanView extends FrameLayout {
         });
     }
 
-    public void addColumnList(String name) {
+    public void addColumnList(ReadableMap list) {
         final ArrayList<Pair<Long, String>> mItemArray = new ArrayList<>();
-        int addItems = 3;
-        for (int i = 0; i < addItems; i++) {
-            long id = sCreatedItems++;
-            mItemArray.add(new Pair<>(id, "Item " + id));
+        ReadableArray items = list.getArray("items");
+        for (int i = 0; i < items.size(); i++) {
+            ReadableMap item = items.getMap(i);
+            long id = item.getInt("id");
+            mItemArray.add(new Pair<>(id, item.getString("text")));
         }
 
         final int column = mColumns;
         final ItemAdapter listAdapter = new ItemAdapter(mItemArray, R.layout.column_item, R.id.item_layout, true);
         final View header = View.inflate(getReactContext(), R.layout.column_header, null);
-        ((TextView) header.findViewById(R.id.text)).setText(name);
+        ((TextView) header.findViewById(R.id.text)).setText(list.getString("header"));
 
         mBoardView.addColumnList(listAdapter, header, false);
         mColumns++;

@@ -11,7 +11,6 @@ import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 
 import com.facebook.react.uimanager.annotations.ReactProp;
-import com.woxthebox.draglistview.BoardView;
 
 import java.util.Map;
 
@@ -37,9 +36,9 @@ public class KanbanBridgeManager extends SimpleViewManager<KanbanView> {
 
     @ReactProp(name="dataSource")
     public void setDataSource(KanbanView view, ReadableArray dataSource){
-        view.addColumnList("Column 1");
-        view.addColumnList("Column 2");
-        view.addColumnList("Column 3");
+        for(int i=0; i< dataSource.size(); i++){
+            view.addColumnList(dataSource.getMap(i));
+        }
     }
 
     @ReactProp(name = "snapToColumnsWhenScrolling", defaultBoolean = true)
