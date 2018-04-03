@@ -26,13 +26,15 @@ export default class App extends Component<Props> {
     return (
       <Kanban
         style={styles.kanban}
+        onStartDragging={e => console.log(e.nativeEvent)}
+        onEndDragging={e => console.log(e.nativeEvent)}
         dataSource={[
-          {header: 'Done', items: [{id: 1, text: 'text 1'}]},
-          {header: 'Now', items: [
+          {header: 'Column 1', items: [{id: 1, text: 'text 1'}]},
+          {header: 'Column 2', items: [
             {id: 2, text: 'text 2'},
             {id: 3, text: 'text 3'}
           ]},
-          {header: 'Next', items: []}
+          {header: 'Column 3', items: []}
         ]}
       />
     );

@@ -3,12 +3,17 @@
 package com.dndboard.kanbanbridge;
 
 
+import android.support.annotation.Nullable;
+
 import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.common.MapBuilder;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 
 import com.facebook.react.uimanager.annotations.ReactProp;
 import com.woxthebox.draglistview.BoardView;
+
+import java.util.Map;
 
 
 public class KanbanBridgeManager extends SimpleViewManager<KanbanView> {
@@ -32,9 +37,9 @@ public class KanbanBridgeManager extends SimpleViewManager<KanbanView> {
 
     @ReactProp(name="dataSource")
     public void setDataSource(KanbanView view, ReadableArray dataSource){
-        view.addColumnList("Done");
-        view.addColumnList("Now");
-        view.addColumnList("Next");
+        view.addColumnList("Column 1");
+        view.addColumnList("Column 2");
+        view.addColumnList("Column 3");
     }
 
     @ReactProp(name = "snapToColumnsWhenScrolling", defaultBoolean = true)
@@ -56,4 +61,15 @@ public class KanbanBridgeManager extends SimpleViewManager<KanbanView> {
     public void setSnapToColumnInLandscape(KanbanView view, boolean snapToColumn) {
         view.setSnapToColumnInLandscape(snapToColumn);
     }
+
+    @Override
+    public @Nullable Map getExportedCustomDirectEventTypeConstants() {
+        return MapBuilder.of(
+                "onEndDragging",
+                MapBuilder.of("registrationName", "onEndDragging"),
+                "onStartDragging",
+                MapBuilder.of("registrationName", "onStartDragging")
+        );
+    }
+
 }

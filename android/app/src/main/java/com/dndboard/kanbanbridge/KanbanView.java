@@ -38,6 +38,31 @@ public class KanbanView extends FrameLayout {
     public void init() {
         View view = inflate(getReactContext(), R.layout.board_layout, this);
         mBoardView = view.findViewById(R.id.board_view);
+        mBoardView.setBoardListener(new BoardView.BoardListener() {
+            @Override
+            public void onItemDragStarted(int column, int row) {
+               startDragging(column, row);
+            }
+
+            @Override
+            public void onItemChangedColumn(int oldColumn, int newColumn) {
+            }
+
+            @Override
+            public void onFocusedColumnChanged(int oldColumn, int newColumn) {
+
+            }
+
+            @Override
+            public void onItemDragEnded(int fromColumn, int fromRow, int toColumn, int toRow) {
+                endDragging(fromColumn, fromRow, toColumn, toRow);
+            }
+
+            @Override
+            public void onItemChangedPosition(int oldColumn, int oldRow, int newColumn, int newRow) {
+
+            }
+        });
     }
 
     public void addColumnList(String name) {
@@ -73,6 +98,32 @@ public class KanbanView extends FrameLayout {
         mBoardView.setSnapToColumnInLandscape(snapToColumn);
     }
 
+
+    public void startDragging(int column, int row) {
+        WritableMap event = Arguments.createMap();
+        event.putInt("column", column);
+        event.putInt("row", row);
+
+        ReactContext reactContext = (ReactContext) getContext();
+        reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(
+                getId(),
+                "onStartDragging",
+                event);
+    }
+
+    public void endDragging(int fromColumn, int fromRow, int toColumn, int toRow) {
+        WritableMap event = Arguments.createMap();
+        event.putInt("fromColumn", fromColumn);
+        event.putInt("fromRow", fromRow);
+        event.putInt("toColumn", toColumn);
+        event.putInt("toRow", toRow);
+
+        ReactContext reactContext = (ReactContext) getContext();
+        reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(
+                getId(),
+                "onEndDragging",
+                event);
+    }
 
     @Override
     public void requestLayout() {
